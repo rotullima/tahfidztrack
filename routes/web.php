@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\InviteController;
+use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\PeerPermissionController;
 use App\Http\Controllers\ProgramController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +40,28 @@ Route::middleware(['web'])->group(function () {
         Route::get('/program/{slug}/edit', [ProgramController::class, 'edit'])->name('program.edit');
         Route::put('/program/{slug}', [ProgramController::class, 'update'])->name('program.update');
         Route::delete('/program/{slug}', [ProgramController::class, 'destroy'])->name('program.destroy');
+    
+        // Invitation Management
+        Route::get('/program/{slug}/invitations', [InvitationController::class, 'index'])->name('invitation.index');
+        Route::post('/program/{slug}/invitation', [InvitationController::class, 'store'])->name('invitation.store');
+        Route::delete('/invitation/{id}', [InvitationController::class, 'destroy'])->name('invitation.destroy');
+        
+        // Participant Management
+        Route::get('/program/{slug}/participants', [ParticipantController::class, 'index'])->name('participant.index');
+        Route::get('/program/{slug}/participant/{id}', [ParticipantController::class, 'viewProgress'])->name('participant.progress');
+        Route::post('/progress/{id}/mark', [ParticipantController::class, 'markProgress'])->name('progress.mark');
     });
-    // Halaman Link Invite untuk Peserta
-    // Route::get('/invite/{token}', [InviteController::class, 'show'])->name('invite.show');
-});
+
+    // Participant Routes (tidak memerlukan login)
+    Route::get('/join/{token}', [InvitationController::class, 'showJoinForm'])->name('invitation.join');
+    Route::post('/join/{token}', [ParticipantController::class, 'register'])->name('participant.register');
+    Route::get('/dashboard', [ParticipantController::class, 'dashboard'])->name('participant.dashboard');
+    Route::post('/progress/update', [ParticipantController::class, 'updateProgress'])->name('participant.update-progress');
+
+    // Peer Review Routes
+    Route::get('/peers', [PeerPermissionController::class, 'index'])->name('peer.index');
+    Route::post('/peer/permission', [PeerPermissionController::class, 'togglePermission'])->name('peer.toggle-permission');
+    Route::get('/peer/{id}/progress', [PeerPermissionController::class, 'viewPeerProgress'])->name('peer.progress');
+        });
+        // Halaman Link Invite untuk Peserta
+        // Route::get('/invite/{token}', [InviteController::class, 'show'])->name('invite.show');

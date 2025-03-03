@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Program;
+use App\Models\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 class ProgramController extends Controller
@@ -57,7 +59,7 @@ class ProgramController extends Controller
         $program = Program::where('slug', $slug)->firstOrFail();
         return view('admin.program.edit', compact('program'));
     }
-    
+
     // Update program
     public function update(Request $request, $slug)
     {
@@ -103,5 +105,23 @@ class ProgramController extends Controller
     {
         $program = Program::where('slug', $slug)->firstOrFail();
         return view('admin.program.show', compact('program'));
+    }
+
+    public function generateInviteLink($slug)
+    {
+        $program = Program::where('slug', $slug)->firstOrFail();
+        
+        $invitation = Invitation::create([
+            'program_id' => $program->id,
+            'token' => Invitation::generateToken(),
+            'is_active' => true
+        ]);
+        
+        $inviteUrl = URL::to('/join/' . $invitation->token);
+        
+        return response()->json([
+            'success' => true,
+            'invite_url' => $inviteUrl
+        ]);
     }
 }

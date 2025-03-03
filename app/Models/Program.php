@@ -17,10 +17,19 @@ class Program extends Model
         'deadline_date'
     ];
 
-    // Cast surah to array when retrieving from database
     protected $casts = [
         'surah' => 'array',
     ];
-
     
+    // Relasi ke invitation
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
+    
+    // Relasi ke participants
+    public function participants()
+    {
+        return $this->hasMany(Participant::class);
+    }
 }
