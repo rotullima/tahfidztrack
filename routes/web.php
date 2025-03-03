@@ -23,19 +23,22 @@ Route::middleware(['web'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Gunakan middleware auth untuk routes yang memerlukan autentikasi
+    // Di dalam middleware auth
     Route::middleware(['auth'])->group(function () {
+        // Ubah route dashboard untuk tetap menggunakan dashboard URL
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-        // Program Routes
+        
+        // Program Routes - tetapkan sebagai sub-route di bawah dashboard
         Route::get('/programs', [ProgramController::class, 'index'])->name('program.index');
         Route::get('/program/create', [ProgramController::class, 'create'])->name('program.create');
         Route::post('/program', [ProgramController::class, 'store'])->name('program.store');
-        Route::get('/program/{id}', [ProgramController::class, 'show'])->name('program.show');
-        Route::get('/program/{id}/edit', [ProgramController::class, 'edit'])->name('program.edit');
-        Route::put('/program/{id}', [ProgramController::class, 'update'])->name('program.update');
-        Route::delete('/program/{id}', [ProgramController::class, 'destroy'])->name('program.destroy');
+        
+        // Gunakan slug, bukan ID
+        Route::get('/program/{slug}', [ProgramController::class, 'show'])->name('program.show');
+        Route::get('/program/{slug}/edit', [ProgramController::class, 'edit'])->name('program.edit');
+        Route::put('/program/{slug}', [ProgramController::class, 'update'])->name('program.update');
+        Route::delete('/program/{slug}', [ProgramController::class, 'destroy'])->name('program.destroy');
     });
-
     // Halaman Link Invite untuk Peserta
     // Route::get('/invite/{token}', [InviteController::class, 'show'])->name('invite.show');
 });

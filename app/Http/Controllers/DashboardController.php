@@ -10,7 +10,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Redirect to ProgramController index
-        return redirect()->route('program.index');
+        // Ambil data programs untuk dashboard, bukan redirect
+        $programs = Program::all();
+        return view('admin.dashboard', compact('programs'));
     }
 }

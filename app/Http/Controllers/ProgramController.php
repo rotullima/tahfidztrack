@@ -52,14 +52,14 @@ class ProgramController extends Controller
     }
 
     // Tampilkan form edit program
-    public function edit($id)
+    public function edit($slug)
     {
-        $program = Program::findOrFail($id);
+        $program = Program::where('slug', $slug)->firstOrFail();
         return view('admin.program.edit', compact('program'));
     }
-
+    
     // Update program
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
         $request->validate([
             'program_name' => 'required|string|max:255',
@@ -67,7 +67,7 @@ class ProgramController extends Controller
             'deadline' => 'required|numeric|min:1',
         ]);
 
-        $program = Program::findOrFail($id);
+        $program = Program::where('slug', $slug)->firstOrFail();
         
         // Siapkan data
         $data = $request->all();
@@ -80,8 +80,8 @@ class ProgramController extends Controller
             $data['surah'] = [$request->surah];
         }
         
-        // Perbarui tanggal deadline berdasarkan input bulan - pastikan nilai integer
-        $months = (int)$request->deadline; // Konversi ke integer
+        // Perbarui tanggal deadline
+        $months = (int)$request->deadline;
         $data['deadline_date'] = Carbon::now()->addMonths($months)->format('Y-m-d');
         
         $program->update($data);
@@ -90,18 +90,18 @@ class ProgramController extends Controller
     }
 
     // Hapus program
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $program = Program::findOrFail($id);
+        $program = Program::where('slug', $slug)->firstOrFail();
         $program->delete();
 
         return redirect()->route('program.index')->with('success', 'Program berhasil dihapus!');
     }
 
     // Show program detail
-    public function show($id)
+    public function show($slug)
     {
-        $program = Program::findOrFail($id);
+        $program = Program::where('slug', $slug)->firstOrFail();
         return view('admin.program.show', compact('program'));
     }
 }

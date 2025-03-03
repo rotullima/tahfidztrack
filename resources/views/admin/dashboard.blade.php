@@ -50,9 +50,9 @@
             </td>
             <td>{{ $program->deadline }} bulan</td>
             <td>
-                <a href="{{ route('program.show', $program->id) }}" class="btn btn-info btn-sm">Detail</a>
-                <a href="{{ route('program.edit', $program->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                <form action="{{ route('program.destroy', $program->id) }}" method="POST" class="d-inline">
+                <a href="{{ route('program.show', $program->slug) }}" class="btn btn-info btn-sm">Detail</a>
+                <a href="{{ route('program.edit', $program->slug) }}" class="btn btn-warning btn-sm">Edit</a>
+                <form action="{{ route('program.destroy', $program->slug) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
